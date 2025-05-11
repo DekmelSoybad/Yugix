@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Anniversary</title>
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Itim', cursive;
+      background: linear-gradient(135deg, #ffd7e9, #fbe5c8);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .balloon {
+      position: absolute;
+      width: 40px;
+      height: 60px;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      width: 2px;
+      height: 20px;
+      background: #333;
+      transform: translateX(-50%);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-200px);
+        opacity: 0;
+      }
+    }
+
+    .card-container {
+      perspective: 1000px;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .card {
+      width: 320px;
+      height: 220px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 1s;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .card.open {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .card-front {
+      background: url("card.png") no-repeat center center;
+      background-size: contain;
+      color: #000;
+      font-size: 1.2rem;
+    }
+
+    .card-back {
+      background: rgba(255, 255, 255, 0.95);
+      color: #d1085f;
+      transform: rotateY(180deg);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      overflow-y: auto;
+    }
+
+    .letter {
+      background: #fff4fa;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-height: 160px;
+      overflow-y: auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      padding: 10px 24px;
+      font-size: 1.1rem;
+      background-color: #ffffffbb;
+      color: #d1085f;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+
+    .btn:hover {
+      background-color: #f8f8f8;
+    }
+
+    audio {
+      display: none;
+    }
+
+    .music-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background: #fff5f9;
+      color: #d1085f;
+      border: 1px solid #d1085f;
+      border-radius: 12px;
+      cursor: pointer;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <!-- ลูกโป่งแบบสุ่ม -->
+  <script>
+    const colors = ["#FF69B4", "#FFD700", "#87CEEB", "#FF8C00", "#ADFF2F", "#BA55D3"];
+    for (let i = 0; i < 10; i++) {
+      const balloon = document.createElement("div");
+      balloon.classList.add("balloon");
+      balloon.style.left = Math.random() * 100 + "%";
+      balloon.style.animationDelay = Math.random() * 5 + "s";
+      balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      document.body.appendChild(balloon);
+    }
+  </script>
+
+  <!-- ปุ่มเปิด/ปิดเพลง -->
+  <button class="music-btn" onclick="toggleMusic()">🎵 เปิด/ปิด เพลง</button>
+
+  <!-- การ์ด -->
+  <div class="card-container" onclick="toggleCard()">
+    <div class="card" id="card">
+      <div class="card-face card-front">
+        👉 คลิกเพื่อเปิดการ์ด 👈
+      </div>
+      <div class="card-face card-back">
+        <div class="letter">
+          <h3>Happy Anniversary 1 M</h3>
+         </p>
+         <h4>ข้อให้มีความสุขกับข้อความที่ได้อ่านน้า<h4>
+                     "👇"
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="letter.html"><button class="btn">For You 💌</button></a>
+
+  <!-- เพลง -->
+  <audio id="bgMusic" loop autoplay>
+    <source src="/happy.mp3" type="audio/mpeg">
+    เพลงของคุณไม่รองรับในเบราว์เซอร์นี้
+  </audio>
+
+  <script>
+    let isOpen = false;
+
+    function toggleCard() {
+      const card = document.getElementById('card');
+      isOpen = !isOpen;
+      card.classList.toggle('open', isOpen);
+    }
+
+    function toggleMusic() {
+      const music = document.getElementById("bgMusic");
+      if (music.paused) {
+        music.play();
+      } else {
+        music.pause();
+      }
+    }
+  </script>
+</body>
+</html>
